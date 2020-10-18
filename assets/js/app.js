@@ -16,7 +16,7 @@ let height = svgHeight - margin.top - margin.bottom;
 
 // Select body, append SVG area to it, and set the dimensions
 let svg = d3
-  .select("body")
+  .select("scatter")
   .append("svg")
   .attr("height", svgHeight)
   .attr("width", svgWidth);
@@ -26,9 +26,10 @@ let chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 // Initial Params
-let chosenXAxis = "hair_length";
+let chosenXAxis = "poverty";
+let chosenYAxis = "obesity";
 
-// function used for updating x-scale var upon click on axis label
+// Function used for updating x-scale var upon click on axis label
 function xScale(poverty, chosenXAxis) {
   // create scales
   let xLinearScale = d3.scaleLinear()
@@ -41,8 +42,21 @@ function xScale(poverty, chosenXAxis) {
 
 }
 
+// Function used for updating x-scale var upon click on axis label
+function yScale(obesity, chosenYAxis) {
+    // create scales
+    let yLinearScale = d3.scaleLinear()
+      .domain([d3.min(obesity, d => d[chosenXAxis]) * 0.8,
+        d3.max(obesity, d => d[chosenXAxis]) * 1.2
+      ])
+      .range([height, 0]);
+  
+    return yLinearScale;
+  
+  }
+
 // Function used for updating xAxis var upon click on axis label
-function renderAxes(newXScale, xAxis) {
+function renderXAxes(newXScale, xAxis) {
     let bottomAxis = d3.axisBottom(newXScale);
   
     xAxis.transition()
@@ -53,7 +67,7 @@ function renderAxes(newXScale, xAxis) {
   }
 
 // Function used for updating yAxis var upon click on axis label
-function renderAxes(newYScale, yAxis) {
+function renderYAxes(newYScale, yAxis) {
     let leftAxis = d3.axisLeft(newYScale);
   
     yAxis.transition()
@@ -189,10 +203,10 @@ function updateToolTip(chosenXAxis, circlesGroup) {
       .attr("stroke", "black");
   
     // Create group for two x-axis labels
-    var labelsGroup = chartGroup.append("g")
+    let labelsGroup = chartGroup.append("g")
       .attr("transform", `translate(${width / 2}, ${height + 20})`);
   
-    var hairLengthLabel = labelsGroup.append("text")
+      let hairLengthLabel = labelsGroup.append("text")
       .attr("x", 0)
       .attr("y", 20)
       .attr("value", "hair_length") // value to grab for event listener
