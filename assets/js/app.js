@@ -74,22 +74,26 @@ function renderCircles(circlesGroup, newXScale, chosenXAxis) {
     return circlesGroup;
   }
 
-  // function used for updating circles group with new tooltip
+  // Function used for updating circles group with new tooltip on xAxis
 function updateToolTip(chosenXAxis, circlesGroup) {
 
     let label;
   
     if (chosenXAxis === "poverty") {
-      label = "Poverty %:";
+      label = "Poverty (%): ";
     }
+
+    if (chosenXAxis === "age") {
+        label = "Age (Median): ";
+      }
     else {
-      label = "# of Albums:";
+      label = "Household Income (Median): ";
     }
   
     var toolTip = d3.tip()
       .attr("class", "tooltip")
       .offset([80, -60])
-      .html(d => `${d.rockband}<br>${label} ${d[chosenXAxis]}`);
+      .html(d => `${d.state}<br>${label} ${d[chosenXAxis]}`);
   
     circlesGroup.call(toolTip);
   
@@ -103,6 +107,42 @@ function updateToolTip(chosenXAxis, circlesGroup) {
   
     return circlesGroup;
   }
+
+ // Function used for updating circles group with new tooltip on yAxis
+ function updateToolTip(chosenYAxis, circlesGroup) {
+
+    let label;
+  
+    if (chosenYAxis === "obesity") {
+      label = "Obesity (%): ";
+    }
+
+    if (chosenYAxis === "smokes") {
+        label = "Smokes (%): ";
+      }
+    else {
+      label = "Lacks Healthcare (%): ";
+    }
+  
+    var toolTip = d3.tip()
+      .attr("class", "tooltip")
+      .offset([80, -60])
+      .html(d => `${d.state}<br>${label} ${d[chosenYAxis]}`);
+  
+    circlesGroup.call(toolTip);
+  
+    circlesGroup.on("mouseover", function(data) {
+        toolTip.show(data);
+      })
+      // onmouseout event
+      .on("mouseout", function(data) {
+        toolTip.hide(data);
+      });
+  
+    return circlesGroup;
+  }
+
+
   // Retrieve data from the CS file
   d3.csv("./assets/data/data.csv").then(censusData => {
 
@@ -117,19 +157,18 @@ function updateToolTip(chosenXAxis, circlesGroup) {
     });
   
     // xLinearScale function above csv import
-    var xLinearScale = xScale(censusData, chosenXAxis);
+    let xLinearScale = xScale(censusData, chosenXAxis);
   
     // Create y scale function
-    var yLinearScale = d3.scaleLinear()
-      .domain([0, d3.max(censusData, d => d.num_hits)])
-      .range([height, 0]);
+    // xLinearScale function above csv import
+    let yLinearScale = yScale(censusData, chosenYAxis);
   
     // Create initial axis functions
-    var bottomAxis = d3.axisBottom(xLinearScale);
-    var leftAxis = d3.axisLeft(yLinearScale);
+    let bottomAxis = d3.axisBottom(xLinearScale);
+    let leftAxis = d3.axisLeft(yLinearScale);
   
     // append x axis
-    var xAxis = chartGroup.append("g")
+    let xAxis = chartGroup.append("g")
       .classed("x-axis", true)
       .attr("transform", `translate(0, ${height})`)
       .call(bottomAxis);
@@ -139,11 +178,11 @@ function updateToolTip(chosenXAxis, circlesGroup) {
       .call(leftAxis);
   
     // append initial circles
-    var circlesGroup = chartGroup.selectAll("circle")
-      .data(hairData)
+    let circlesGroup = chartGroup.selectAll("circle")
+      .data(censusData)
       .join("circle")
       .attr("cx", d => xLinearScale(d[chosenXAxis]))
-      .attr("cy", d => yLinearScale(d.num_hits))
+      .attr("cy", d => yLinearScale(d[chosenYAxis]))
       .attr("r", 20)
       .attr("fill", "pink")
       .attr("opacity", 0.5)
