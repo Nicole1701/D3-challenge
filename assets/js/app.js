@@ -77,19 +77,20 @@ function renderYAxes(newYScale, yAxis) {
     return yAxis;
   }
 
-// function used for updating circles group with a transition to
-// new circles
-function renderCircles(circlesGroup, newXScale, chosenXAxis) {
+// Function to update circles with a transition 
+
+function renderCircles(circlesGroup, newXScale, newYScale, chosenXAxis, chosenYAxis) {
 
     circlesGroup.transition()
       .duration(1000)
       .attr("cx", d => newXScale(d[chosenXAxis]));
+      .attr("cy", d => newYScale(d[chosenYAxis]));
   
     return circlesGroup;
   }
 
   // Function used for updating circles group with new tooltip on xAxis
-function updateToolTip(chosenXAxis, circlesGroup) {
+function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
 
     let label;
   
@@ -103,11 +104,41 @@ function updateToolTip(chosenXAxis, circlesGroup) {
     else {
       label = "Household Income (Median): ";
     }
+
+    if (chosenYAxis === "obesity") {
+        label = "Obesity (%): ";
+      }
   
-    var toolTip = d3.tip()
+      if (chosenYAxis === "smokes") {
+          label = "Smokes (%): ";
+        }
+      else {
+        label = "Lacks Healthcare (%): ";
+      }
+    
+      var toolTip = d3.tip()
+        .attr("class", "tooltip")
+        .offset([80, -60])
+        .html(d => `${d.state}<br>${label} ${d[chosenYAxis]}`);
+
+        var toolTip = d3.tip()
       .attr("class", "tooltip")
       .offset([80, -60])
       .html(d => `${d.state}<br>${label} ${d[chosenXAxis]}`);
+    
+      circlesGroup.call(toolTip);
+    
+      // Create mouseover event
+      circlesGroup.on("mouseover", function(data) {
+          toolTip.show(data);
+        })
+
+        // Create mouseout event
+        .on("mouseout", function(data) {
+          toolTip.hide(data);
+        });
+  
+    
   
     circlesGroup.call(toolTip);
   
@@ -118,6 +149,8 @@ function updateToolTip(chosenXAxis, circlesGroup) {
       .on("mouseout", function(data) {
         toolTip.hide(data);
       });
+
+      
   
     return circlesGroup;
   }
