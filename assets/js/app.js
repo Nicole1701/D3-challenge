@@ -32,8 +32,7 @@ let chartGroup = svg.append("g")
 let chosenXAxis = "poverty";
 let chosenYAxis = "obesity";
 
-console.log(chosenXAxis)
-console.log(chosenYAxis)
+/////////////////////////Fucntions////////////////////////////
 
 // Function to update x-scale var upon axis label click
 function xScale(censusData, chosenXAxis) {
@@ -45,7 +44,6 @@ function xScale(censusData, chosenXAxis) {
     .range([0, width]);
 
   return xLinearScale;
-
 }
 
 // Function to update y-scale var upon axis label click
@@ -58,11 +56,10 @@ function yScale(censusData, chosenYAxis) {
       .range([height, 0]);
   
     return yLinearScale;
-  
   }
 
 // Function to update xAxis var upon click on axis label
-function renderAxes(newXScale, xAxis) {
+function renderXAxes(newXScale, xAxis) {
     let bottomAxis = d3.axisBottom(newXScale);
   
     xAxis.transition()
@@ -84,7 +81,6 @@ function renderYAxes(newYScale, yAxis) {
   }
 
 // Function to update circles with a transition 
-
 function renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYAxis) {
 
     circlesGroup.transition()
@@ -139,7 +135,7 @@ function updateToolTip(circlesGroup, chosenXAxis, chosenYAxis) {
         });
    
     return circlesGroup;
-  }
+  };
 
 /////////////////////////Create Chart////////////////////////////
 
@@ -173,7 +169,7 @@ function updateToolTip(circlesGroup, chosenXAxis, chosenYAxis) {
       .call(bottomAxis);
   
     // Append y axis
-    chartGroup.append("g")
+    let yAxis = charGroup.append("g")
       .classed("y-axis", true)
       .call(leftAxis);
   
@@ -266,17 +262,17 @@ function updateToolTip(circlesGroup, chosenXAxis, chosenYAxis) {
           xLinearScale = xScale(censusData, chosenXAxis);
   
           // Update x axis with transition
-          xAxis = renderAxes(xLinearScale, xAxis);
+          xAxis = renderXAxes(xLinearScale, xAxis);
   
           // Update circles with new x values
           circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
   
           // Uppdate tooltips with new info
-          circlesGroup = updateToolTip(circlesGroup, chosenXAxis);
+          circlesGroup = updateToolTip(circlesGroup, chosenXAxis, chosenYAxis);
   
           // Change classes to change bold text
           if (chosenXAxis === "poverty") {
-            incomeLabel
+            povertyLabel
               .classed("active", true)
               .classed("inactive", false);
             ageLabel
@@ -309,6 +305,7 @@ function updateToolTip(circlesGroup, chosenXAxis, chosenYAxis) {
               .classed("inactive", false);
             }
         }
+      });
 
          // Add x axis labels event listener
     ylabelsGroup.selectAll("text")
@@ -326,7 +323,7 @@ function updateToolTip(circlesGroup, chosenXAxis, chosenYAxis) {
         yLinearScale = yScale(censusData, chosenYAxis);
 
         // Update y axis with transition
-        yAxis = renderAxes(yLinearScale, yAxis);
+        yAxis = renderYAxes(yLinearScale, yAxis);
 
         // Update circles with new y values
         circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
@@ -371,4 +368,3 @@ function updateToolTip(circlesGroup, chosenXAxis, chosenYAxis) {
       }
       });
   }).catch(error => console.log(error));
-})
