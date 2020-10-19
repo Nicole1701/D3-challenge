@@ -169,7 +169,7 @@ function updateToolTip(circlesGroup, chosenXAxis, chosenYAxis) {
       .call(bottomAxis);
   
     // Append y axis
-    let yAxis = charGroup.append("g")
+    let yAxis = chartGroup.append("g")
       .classed("y-axis", true)
       .call(leftAxis);
   
@@ -268,7 +268,7 @@ function updateToolTip(circlesGroup, chosenXAxis, chosenYAxis) {
           circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
   
           // Uppdate tooltips with new info
-          circlesGroup = updateToolTip(circlesGroup, chosenXAxis, chosenYAxis);
+          circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
   
           // Change classes to change bold text
           if (chosenXAxis === "poverty") {
@@ -368,3 +368,4 @@ function updateToolTip(circlesGroup, chosenXAxis, chosenYAxis) {
       }
       });
   }).catch(error => console.log(error));
+
