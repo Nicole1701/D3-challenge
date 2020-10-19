@@ -80,67 +80,64 @@ function renderYAxes(newYScale, yAxis) {
     return yAxis;
   }
 
-// Function to update circles with a transition 
-function renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYAxis) {
-
+// Function to update circles on transition 
+  function renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYAxis) {
+  
     circlesGroup.transition()
       .duration(1000)
       .attr("cx", d => newXScale(d[chosenXAxis]))
       .attr("cy", d => newYScale(d[chosenYAxis]));
   
     return circlesGroup;
-  }
-
-   // Function to update labels with transitions!!!!
-   function renderLabels(circleLabels, newXScale, chosenXAxis, newYScale, chosenYAxis) {
+  }  
+  // Function to update state label on transition
+  function renderLabels(stateLabels, newXScale, chosenXAxis, newYScale, chosenYAxis) {
   
-    circleLabels.transition()
+    stateLabels.transition()
       .duration(1000)
       .attr("x", d => newXScale(d[chosenXAxis]))
       .attr("y", d => newYScale(d[chosenYAxis]));
   
-    return circleLabels;
+    return stateLabels;
   }
-
-  // Function to update circles group with new tooltip on xAxis
-function updateToolTip(circlesGroup, chosenXAxis, chosenYAxis) {
+  
+  // Function to update new tooltip
+  function updateToolTip(circlesGroup, chosenXAxis, chosenYAxis) {
   
     if (chosenXAxis === "poverty") {
       var xlabel = "In Poverty (%): ";
     }
-
     else if (chosenXAxis === "age") {
-        var xlabel = "Age (Median): ";
-      }
+      var xlabel = "Age (Median): ";
+    }
     else {
-        var xlabel = "Household Income (Median): $";
-    };
+      var xlabel = "Household Income (Median): $";
+    };  
 
-    if (chosenYAxis === "obesity") {
-        var ylabel = "Obesity (%): ";
-      }
+    if (chosenYAxis === "healthcare") {
+      var ylabel = "Lacks Healthcare (%): ";
+    }
+    else if (chosenXAxis === "obesity") {
+      var ylabel = "Obese (%): ";
+    }
+    else {
+      var ylabel = "Smokers (%): ";
+    }
   
-      else if (chosenYAxis === "smokes") {
-        var ylabel = "Smokes (%): ";
-        }
-      else {
-        var ylabel = "Lacks Healthcare (%): ";
-      }
-    
-       var toolTip = d3.tip()
+    var toolTip = d3.tip()
       .attr("class", "tooltip")
       .offset([80, -60])
-      .html(d => `${d.state}<br>${xlabel} ${d[chosenXAxis]}<br>${ylabel} ${d[chosenYAxis]}`);
+      .html(d => `${d.state}<br>${ylabel} ${d[chosenYAxis]}<br>${xlabel} ${d[chosenXAxis]}`);
   
     circlesGroup.call(toolTip);
 
-
+  // Create mouseover events
     circlesGroup
-    // Mouseover Event - Show tooltip
+    // Show tooltip
         .on("mouseover", function(data) {
       toolTip.show(data);
         })
-      // Mouseout Event - Hide tooltip
+      // Hide tooltip
         .on("mouseout", function(data) {
         toolTip.hide(data);
         });
@@ -163,140 +160,209 @@ function updateToolTip(circlesGroup, chosenXAxis, chosenYAxis) {
       data.smokes = +data.smokes;
     });
   
-    // xLinearScale function above csv import
-    let xLinearScale = xScale(censusData, chosenXAxis);
+  // xLinearScale function above csv import
+  let xLinearScale = xScale(censusData, chosenXAxis);
   
-    // xLinearScale function above csv import
-    let yLinearScale = yScale(censusData, chosenYAxis);
+   // xLinearScale function above csv import
+  let yLinearScale = yScale(censusData, chosenYAxis);
+ 
+  // Create initial axis functions
+  let bottomAxis = d3.axisBottom(xLinearScale);
+  let leftAxis = d3.axisLeft(yLinearScale);
   
-    // Create initial axis functions
-    let bottomAxis = d3.axisBottom(xLinearScale);
-    let leftAxis = d3.axisLeft(yLinearScale);
+  // Append x axis
+  let xAxis = chartGroup.append("g")
+    .classed("x-axis", true)
+    .attr("transform", `translate(0, ${height})`)
+    .call(bottomAxis);
   
-    // Append x axis
-    let xAxis = chartGroup.append("g")
-      .classed("x-axis", true)
-      .attr("transform", `translate(0, ${height})`)
-      .call(bottomAxis);
-  
-    // Append y axis
-    let yAxis = chartGroup.append("g")
-      .classed("y-axis", true)
-      .call(leftAxis);
-  
-    // Append initial circles
-    var circlesGroup = chartGroup.selectAll("g")
-        .data(censusData)
-        .enter()
-        .append("g")
-        .classed("circles", true);
+  // Append y axis
+  let yAxis = chartGroup.append("g")
+    .classed("y-axis", true)
+    .call(leftAxis);
+
+  // Append initial circles
+  let circles = chartGroup.selectAll("g")
+    .data(censusData)
+    .enter()
+    .append("g")
+    .classed("circles", true);
     
-    var circlesGroup = chartGroup.selectAll("circle")
-      .data(censusData)
-      .join("circle")
-      .attr("cx", d => xLinearScale(d[chosenXAxis]))
-      .attr("cy", d => yLinearScale(d[chosenYAxis]))
-      .attr("r", 15)
-      .attr("fill", " blue")
-      .attr("opacity", 0.5)
-      .attr("stroke", "black");
+  var circlesGroup = circles.append("circle")
+    .data(censusData)
+    .attr("cx", d => xLinearScale(d[chosenXAxis]))
+    .attr("cy", d => yLinearScale(d[chosenYAxis]))
+    .attr("r", 15)
+    .attr("fill", "blue")
+    .attr("opacity", ".5")
+    .attr("stroke", "black");
+  
+  // Place state labels inside circle
+  let stateLabels = chartGroup.selectAll(".circles")
+    .append("text")
+    .text( d => d.abbr)
+    .attr("text-anchor", "middle")
+    .attr("alignment-baseline", "middle")
+    .attr("font-size","14")
+    .attr("font-weight","bold")
+    .attr("x", d => xLinearScale(d[chosenXAxis]))  
+    .attr("y", d => yLinearScale(d[chosenYAxis]));
 
+  // Create group for the x-axis labels
+  let xLabelsGroup = chartGroup.append("g")
+    .attr("transform", `translate(${width / 2}, ${height + 20})`);
+  
+  let povertyLabel = xLabelsGroup.append("text")
+    .attr("x", 0)
+    .attr("y", 15)
+    .attr("value", "poverty")
+    .classed("active", true)
+    .text("In Poverty (%)");
+  
+  let ageLabel = xLabelsGroup.append("text")
+    .attr("x", 0)
+    .attr("y", 35)
+    .attr("value", "age")
+    .classed("inactive", true)
+    .text("Age (Median)");
       
-  
-    // Create group for three x-axis labels
-    let xlabelsGroup = chartGroup.append("g")
-      .attr("transform", `translate(${width / 2}, ${height + 20})`);
-  
-      let povertyLabel = xlabelsGroup.append("text")
-      .attr("x", 0)
-      .attr("y", 25)
-      .attr("value", "poverty")
+  let incomeLabel = xLabelsGroup.append("text")
+    .attr("x", 0)
+    .attr("y", 55)
+    .attr("value", "income")
+    .classed("inactive", true)
+    .text("Household Income (Median)");
+
+  // Create group for the y-axis labels
+  let yLabelsGroup = chartGroup.append("g")
+        .attr("transform", "rotate(-90)")
+
+  let obesityLabel = yLabelsGroup.append("text")
+      .attr("x", 0 - (height/2))
+      .attr("y", 0 - (margin.left/3))
+      .attr("value", "obesity")
       .classed("active", true)
-      .text("Poverty (%)");
-
-      let ageLabel = xlabelsGroup.append("text")
-      .attr("x", 0)
-      .attr("y", 50)
-      .attr("value", "age")
+      .text("Obesity (%)");    
+      
+  let smokesLabel = yLabelsGroup.append("text")
+      .attr("x", 0 - (height/2))
+      .attr("y", -25 - (margin.left/3))
+      .attr("value", "smokes")
       .classed("inactive", true)
-      .text("Age (Median)");
+      .text("Smokes (%)");   
 
-      let incomeLabel = xlabelsGroup.append("text")
-      .attr("x", 0)
-      .attr("y", 75)
-      .attr("value", "income")
+  let healthcareLabel = yLabelsGroup.append("text")
+      .attr("x", 0 - (height/2))
+      .attr("y", -50 - (margin.left/3))
+      .attr("value", "healthcare")
       .classed("inactive", true)
-      .text("Income (Median)");
+      .text("Lacks Healthcare (%)");
+  
+  // Update the ToolTip function
+  var circlesGroup = updateToolTip(circlesGroup, chosenXAxis, chosenYAxis);
+  
+  // Add x-axis labels event listener
+  xLabelsGroup.selectAll("text")
+    .on("click", function() {
+    // Get value of selection
+      var value = d3.select(this).attr("value");
+      if (value !== chosenXAxis) {
 
-    // Create group for three y-axis labels
-    let ylabelsGroup = chartGroup.append("g")
-      .attr("transform", "rotate(-90)");
+      // Replace chosenXAxis with value
+      chosenXAxis = value;
+      console.log(chosenXAxis)
   
-        let obesityLabel = ylabelsGroup.append("text")
-        .attr("x", 0 - (height / 2))
-        .attr("y", 0 - (margin.left/3))
-        .attr("value", "obesity") // value to grab for event listener
-        .classed("active", true)
-        .text("Obesity (%)");
+      // Update x scale for new data
+      xLinearScale = xScale(censusData, chosenXAxis);
+  
+      // Update x axis with transition
+      xAxis = renderXAxes(xLinearScale, xAxis);
+  
+      // Update circles with new x values
+      circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
+  
+      // Uppdate tooltips with new info
+      circlesGroup = updateToolTip(circlesGroup, chosenXAxis, chosenYAxis);
 
-        let smokesLabel = ylabelsGroup.append("text")
-        .attr("x", 0 - (height / 2))
-        .attr("y", -25 - (margin.left/3))
-        .attr("value", "smokes") // value to grab for event listener
-        .classed("inactive", true)
-        .text("Smokes (%)");
-          
-        let healthcareLabel = ylabelsGroup.append("text")
-        .attr("x", 0 - (height / 2))
-        .attr("y", -50 - (margin.left/3))
-        .attr("value", "healthcare") // value to grab for event listener
-        .classed("inactive", true)
-        .text("Lacks Healthcare (%)");
+      // Update the Labels function
+      stateLabels = renderLabels(stateLabels, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
   
-    // Update the ToolTip function
-    circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
+      // Change classes to change bold text
+      if (chosenXAxis === "poverty") {
+        povertyLabel
+          .classed("active", true)
+          .classed("inactive", false);
+        ageLabel
+          .classed("active", false)
+          .classed("inactive", true);
+        incomeLabel
+          .classed("active", false)
+          .classed("inactive", true);
+          }
+      else if (chosenXAxis === "age") {
+        povertyLabel
+          .classed("active", false)
+          .classed("inactive", true);
+        ageLabel
+          .classed("active", true)
+          .classed("inactive", false);
+        incomeLabel
+          .classed("active", false)
+          .classed("inactive", true);
+          }
+      else {
+        povertyLabel
+          .classed("active", false)
+          .classed("inactive", true);
+        ageLabel
+          .classed("active", false)
+          .classed("inactive", true);
+        incomeLabel
+          .classed("active", true)
+          .classed("inactive", false);
+          }
+      }
+    });
+    
+    // Add y-axis labels event listener
+    yLabelsGroup.selectAll("text")
+    .on("click", function() {
+    // Get value of selection
+      var value = d3.select(this).attr("value");
+      if (value !== chosenYAxis) {
 
+      // Replace chosenYaxis with value
+      chosenYAxis = value;
+      console.log(chosenYAxis)
   
-    // Add x axis labels event listener
-    xlabelsGroup.selectAll("text")
-      .on("click", function() {
-        // get value of selection
-        var value = d3.select(this).attr("value");
-        if (value !== chosenXAxis) {
+      // Update x scale for new data
+      yLinearScale = yScale(censusData, chosenYAxis);
   
-          // Replace chosenXAxis with value
-          chosenXAxis = value;
+      // Update x axis with transition
+      yAxis = renderYAxes(yLinearScale, yAxis);
   
-          console.log(chosenXAxis)
+      // Update circles with new x values
+      circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
   
-          // Update x scale for new data
-          xLinearScale = xScale(censusData, chosenXAxis);
-  
-          // Update x axis with transition
-          xAxis = renderXAxes(xLinearScale, xAxis);
-  
-          // Update circles with new x values
-          circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
-  
-          // Uppdate tooltips with new info
-          circlesGroup = updateToolTip(chosenXAxis, chosenYAxis,);
+      // Uppdate tooltips with new info
+      circlesGroup = updateToolTip(circlesGroup, chosenXAxis, chosenYAxis);
 
-          // Update the Labels function
-          circleLabels = renderLabels(circleLabels, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
+      // Update the Labels function
+      stateLabels = renderLabels(stateLabels, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
   
-        // Change classes to change bold text
-        if (chosenXAxis === "poverty") {
-          povertyLabel
+         // Change classes to change bold text
+         if (chosenYAxis === "obesity") {
+          obesityLabel
             .classed("active", true)
             .classed("inactive", false);
-          ageLabel
+          smokesLabel
             .classed("active", false)
             .classed("inactive", true);
-          incomeLabel
+          healthcareLabel
             .classed("active", false)
             .classed("inactive", true);
-            }
-        else if (chosenXAxis === "age") {
+          }
+        else if (chosenYAxis === "smokes") {
           obesityLabel
             .classed("active", false)
             .classed("inactive", true);
@@ -306,79 +372,15 @@ function updateToolTip(circlesGroup, chosenXAxis, chosenYAxis) {
           healthcareLabel
             .classed("active", false)
             .classed("inactive", true);
-            }
-        else {
-          incomeLabel
-            .classed("active", false)
-            .classed("inactive", true);
-          ageLabel
-            .classed("active", false)
-            .classed("inactive", true);
-          incomeLabel
-            .classed("active", true)
-            .classed("inactive", false);
-            }
-        }
-      });
-
-         // Add x axis labels event listener
-    ylabelsGroup.selectAll("text")
-    .on("click", function() {
-      // Get value of selection
-      var value = d3.select(this).attr("value");
-      if (value !== chosenYAxis) {
-
-        // Replace chosenYAxis with value
-        chosenYAxis = value;
-
-        console.log(chosenYAxis)
-
-        // Update y scale for new data
-        yLinearScale = yScale(censusData, chosenYAxis);
-
-        // Update y axis with transition
-        yAxis = renderYAxes(yLinearScale, yAxis);
-
-        // Update circles with new y values
-        circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
-
-        // Update tooltips with new info
-        circlesGroup = updateToolTip(circlesGroup, chosenYAxis);
-
-        // Update the Labels function
-        circleLabels = renderLabels(circleLabels, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
-        
-        // Change classes to change bold text
-        if (chosenYAxis === "obesity") {
-          incomeLabel
-            .classed("active", true)
-            .classed("inactive", false);
-          ageLabel
-            .classed("active", false)
-            .classed("inactive", true);
-          incomeLabel
-            .classed("active", false)
-            .classed("inactive", true);
-          }
-        else if (chosenYAxis === "smokes") {
-          incomeLabel
-            .classed("active", false)
-            .classed("inactive", true);
-          ageLabel
-            .classed("active", true)
-            .classed("inactive", false);
-          incomeLabel
-            .classed("active", false)
-            .classed("inactive", true);
           }
         else {
-          incomeLabel
+          obesityLabel
             .classed("active", false)
             .classed("inactive", true);
-          ageLabel
+          smokesLabel
             .classed("active", false)
             .classed("inactive", true);
-          incomeLabel
+          healthcareLabel
             .classed("active", true)
             .classed("inactive", false);
           }
