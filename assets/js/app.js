@@ -190,7 +190,7 @@ function updateToolTip(circlesGroup, chosenXAxis, chosenYAxis) {
       .join("circle")
       .attr("cx", d => xLinearScale(d[chosenXAxis]))
       .attr("cy", d => yLinearScale(d[chosenYAxis]))
-      .attr("r", 20)
+      .attr("r", 15)
       .attr("fill", " blue")
       .attr("opacity", 0.5)
       .attr("stroke", "black");
@@ -202,21 +202,21 @@ function updateToolTip(circlesGroup, chosenXAxis, chosenYAxis) {
       let povertyLabel = xlabelsGroup.append("text")
       .attr("x", 0)
       .attr("y", 20)
-      .attr("value", "poverty") // value to grab for event listener
+      .attr("value", "poverty")
       .classed("active", true)
       .text("Poverty (%)");
 
       let ageLabel = xlabelsGroup.append("text")
       .attr("x", 0)
-      .attr("y", 20)
-      .attr("value", "age") // value to grab for event listener
+      .attr("y", 40)
+      .attr("value", "age")
       .classed("inactive", true)
       .text("Age (Median)");
 
       let incomeLabel = xlabelsGroup.append("text")
       .attr("x", 0)
-      .attr("y", 20)
-      .attr("value", "income") // value to grab for event listener
+      .attr("y", 60)
+      .attr("value", "income")
       .classed("inactive", true)
       .text("Income (Median)");
 
@@ -225,22 +225,22 @@ function updateToolTip(circlesGroup, chosenXAxis, chosenYAxis) {
       .attr("transform", "rotate(-90)");
   
         let obesityLabel = ylabelsGroup.append("text")
-        .attr("x", 0)
-        .attr("y", 40)
+        .attr("x", 0 - (height / 2))
+        .attr("y", 0 - (margin.left/3))
         .attr("value", "obesity") // value to grab for event listener
         .classed("active", true)
         .text("Obesity (%)");
 
         let smokesLabel = ylabelsGroup.append("text")
-        .attr("x", 0)
-        .attr("y", 40)
+        .attr("x", 0 - (height / 2))
+        .attr("y", -25 - (margin.left/3))
         .attr("value", "smokes") // value to grab for event listener
         .classed("inactive", true)
         .text("Smokes (%)");
           
         let healthcareLabel = ylabelsGroup.append("text")
-        .attr("x", 0)
-        .attr("y", 40)
+        .attr("x", 0 - (height / 2))
+        .attr("y", -50 - (margin.left/3))
         .attr("value", "healthcare") // value to grab for event listener
         .classed("inactive", true)
         .text("Lacks Healthcare (%)");
