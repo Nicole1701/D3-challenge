@@ -3,7 +3,7 @@
 
 // Define SVG area dimensions
 let svgWidth = 960;
-let svgHeight = 560;
+let svgHeight = 600;
 
 // Define the chart's margins as an object
 let margin= {
@@ -19,7 +19,7 @@ let height = svgHeight - margin.top - margin.bottom;
 
 // Select scatter, append SVG area to it, and set the dimensions
 let svg = d3
-  .select("scatter")
+  .select("#scatter")
   .append("svg")
   .attr("height", svgHeight)
   .attr("width", svgWidth);
@@ -91,32 +91,43 @@ function renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYA
     return circlesGroup;
   }
 
+   // Update circles with transitions!!!!
+   function renderLabels(circleLabels, newXScale, chosenXAxis, newYScale, chosenYAxis) {
+  
+    cLabels.transition()
+      .duration(1000)
+      .attr("x", d => newXScale(d[chosenXAxis]))
+      .attr("y", d => newYScale(d[chosenYAxis]));
+  
+    return circleLabels;
+  }
+
   // Function to update circles group with new tooltip on xAxis
 function updateToolTip(circlesGroup, chosenXAxis, chosenYAxis) {
   
     if (chosenXAxis === "poverty") {
-      let xLabel = "In Poverty (%): ";
+      var xLabel = "In Poverty (%): ";
     }
 
     else if (chosenXAxis === "age") {
-        let xLabel = "Age (Median): ";
+        var xLabel = "Age (Median): ";
       }
     else {
-        let xLabel = "Household Income (Median): ";
+        var xLabel = "Household Income (Median): $";
     };
 
     if (chosenYAxis === "obesity") {
-        let yLabel = "Obesity (%): ";
+        var yLabel = "Obesity (%): ";
       }
   
       else if (chosenYAxis === "smokes") {
-        let yLabel = "Smokes (%): ";
+        var yLabel = "Smokes (%): ";
         }
       else {
-        let yLabel = "Lacks Healthcare (%): ";
+        var yLabel = "Lacks Healthcare (%): ";
       }
     
-      let toolTip = d3.tip()
+      var toolTip = d3.tip()
         .attr("class", "tooltip")
         .offset([80, -60])
         .html(d => `${d.state}<br>${xLabel} ${d[chosenXAxis]}<br>${yLabel} ${d[chosenYAxis]}`);
@@ -233,15 +244,6 @@ function updateToolTip(circlesGroup, chosenXAxis, chosenYAxis) {
         .attr("value", "healthcare") // value to grab for event listener
         .classed("inactive", true)
         .text("Lacks Healthcare (%)");
-
-    // // append y axis
-    // chartGroup.append("text")
-    //   .attr("transform", "rotate(-90)")
-    //   .attr("y", 0 - margin.left)
-    //   .attr("x", 0 - (height / 2))
-    //   .attr("dy", "1em")
-    //   .classed("axis-text", true)
-    //   .text("Number of Billboard 500 Hits");
   
     // Update the ToolTip function
     var circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
@@ -268,7 +270,7 @@ function updateToolTip(circlesGroup, chosenXAxis, chosenYAxis) {
           circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
   
           // Uppdate tooltips with new info
-          circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
+          circlesGroup = updateToolTip(chosenXAxis, chosenYAxis,);
   
           // Change classes to change bold text
           if (chosenXAxis === "poverty") {
