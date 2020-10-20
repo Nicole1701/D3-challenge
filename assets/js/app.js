@@ -167,6 +167,8 @@ function renderYAxes(newYScale, yAxis) {
       data.obesity = +data.obesity;
       data.smokes = +data.smokes;
     });
+
+    console.log(censusData)
   
   // xLinearScale function above csv import
   let xLinearScale = xScale(censusData, chosenXAxis);
@@ -204,6 +206,8 @@ function renderYAxes(newYScale, yAxis) {
     .attr("fill", "blue")
     .attr("opacity", ".5")
     .attr("stroke", "black");
+
+    console.log(circlesGroup)
   
   // Place state labels inside circle
   let stateLabels = chartGroup.selectAll(".circles")
