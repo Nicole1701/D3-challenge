@@ -205,9 +205,9 @@ function renderYAxes(newYScale, yAxis) {
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d[chosenYAxis]))
     .attr("r", 15)
-    .attr("fill", "blue")
+    .attr("fill", "#659EC7")
     .attr("opacity", ".5")
-    .attr("stroke", "black");
+    .attr("stroke", "darkblue");
 
     console.log(circlesGroup)
   
@@ -219,6 +219,7 @@ function renderYAxes(newYScale, yAxis) {
     .attr("alignment-baseline", "middle")
     .attr("font-size","14")
     .attr("font-weight","bold")
+    .style("fill", "darkblue")
     .attr("x", d => xLinearScale(d[chosenXAxis]))  
     .attr("y", d => yLinearScale(d[chosenYAxis]));
 
