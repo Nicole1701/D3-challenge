@@ -143,7 +143,7 @@ function renderYAxes(newYScale, yAxis) {
     circlesGroup
     // Show tooltip
         .on("mouseover", function(data) {
-      toolTip.show(data)
+      toolTip.show(data);
         })
       // Hide tooltip
         .on("mouseleave", function(data) {
