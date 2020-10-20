@@ -1,5 +1,6 @@
 /////////////////////////Set Up Chart////////////////////////////
-// observablehq.com/@abebrath/scatterplot-of-text-labels
+
+
 
 // Define SVG area dimensions
 let svgWidth = 960;
@@ -41,7 +42,7 @@ function xScale(censusData, chosenXAxis) {
     .domain([d3.min(censusData, d => d[chosenXAxis]) * 0.8,
       d3.max(censusData, d => d[chosenXAxis]) * 1.2
     ])
-    .range([0, width]);
+    .range([0, width]).nice();
 
   return xLinearScale;
 }
@@ -53,7 +54,7 @@ function yScale(censusData, chosenYAxis) {
       .domain([d3.min(censusData, d => d[chosenYAxis]) * 0.8,
         d3.max(censusData, d => d[chosenYAxis]) * 1.2
       ])
-      .range([height, 0]);
+      .range([height, 0]).nice();
   
     return yLinearScale;
   }
@@ -123,11 +124,18 @@ function renderYAxes(newYScale, yAxis) {
     else {
       var ylabel = "Smokers (%): ";
     }
-  
-    var toolTip = d3.tip()
+    
+    // Create ToolTip
+    //udemy.com/course/masteringd3js/
+
+    const toolTip = d3.tip()
       .attr("class", "tooltip")
-      .offset([80, -60])
-      .html(d => `${d.state}<br>${ylabel} ${d[chosenYAxis]}<br>${xlabel} ${d[chosenXAxis]}`);
+        .html(d => {
+          let text = `<strong>State:</strong> ${d.state}<br>`
+          text += `<strong>${xlabel}: </strong> ${d[chosenXAxis]}<br>`
+          text += `<strong>${ylabel}: </strong> ${d[chosenYAxis]}<br>`
+          return text
+        })
   
     circlesGroup.call(toolTip);
 
@@ -138,7 +146,7 @@ function renderYAxes(newYScale, yAxis) {
       toolTip.show(data);
         })
       // Hide tooltip
-        .on("mouseout", function(data) {
+        .on("mouseleave", function(data) {
         toolTip.hide(data);
         });
   
