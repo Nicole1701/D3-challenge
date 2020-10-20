@@ -4,8 +4,8 @@
 
 ## Before you Begin
 
-- Webpage can be found here: [D3 Times](https://nicole1701.github.io/D3-challenge)
-- The data set included with the assignment is based on 2014 ACS 1-year estimates and includes data on rates of income, obesity, poverty, etc. by state: [Data Set](https://factfinder.census.gov/faces/nav/jsf/pages/searchresults.xhtml)
+- Webpage can be found here: [D3 Times](https://nicole1701.github.io/D3-challenge/index.html)
+- The data set included with the assignment is based on 2014 ACS 1-year estimates and includes data on rates of income, obesity, poverty, etc. by state: [Data Set](https://data.census.gov/cedsci/)
 
 ## Top Level Analysis
 
