@@ -192,10 +192,12 @@ function renderYAxes(newYScale, yAxis) {
     .call(leftAxis);
 
   // Append initial circles
-  let circles = chartGroup.selectAll("g")
+  //stackoverflow.com/questions/26576050/d3-enter-append-not-appending-all-elements-of-my-array
+  let circles = chartGroup.selectAll("g.circle")
     .data(censusData)
     .enter()
     .append("g")
+    .attr("class", "circle")
     .classed("circles", true);
     
   var circlesGroup = circles.append("circle")

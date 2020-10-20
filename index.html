@@ -10,11 +10,15 @@
 
 </head>
 
-<body>
-  <div class="container">
+<body style="
+background-image: url(./assets/images/newspaper1.jpg);
+background-size: 100%;
+padding-bottom: 50px;
+">
+  <div class="container"style = "background-color: white">
     <div class="row">
-      <div class="col-xs-12 col-md-12">
-        <h1 style= "text-align: center; color: black">D3Times</h1>
+      <div class="col-xs-12 col-md-12" style = "background-color: darkblue; color: white">
+        <h1 style= "text-align: center; margin-top: 30px; margin-bottom: 20px">D3Times</h1>
       </div>
     </div>
     <div class="row">
@@ -27,26 +31,26 @@
     <div class="row">
       <div class="col-xs-12  col-md-9">
         <div class="article">
-          <h2>Correlations Discovered Between Health Risks and Age, Income</h2>
+          <h2 >Correlations Discovered Between Health Risks and Age, Income</h2>
           <hr>
           <h5>Top Level Analysis</h5>
             <br />
             <ul>
               <li>
-                <strong>Poverty:</strong> There appears to be a slight positive correlation between poverty and all three of the factors
+                <strong>Poverty:</strong> There appears to be a correlation between poverty and all three of the factors
                 looked at. States with a higher % of their population in poverty, also experience higher levels of obesity,
                 smoking and lack of healthcare.
               </li>
                 
               <li>
                 <strong>Age:</strong> There appears to be a positive correlation between age and smoking. The older the
-                population, the more likely they are to smoke. There is a negative correlation between age and healthcare.
+                population, the more likely they are to be smoker. There is also a negative correlation between age and healthcare.
                 The older a population, the more likely they are to have healthcare. There does not appear to be a correlation between age and obesity. 
               </li>
 
               <li>
-                <strong>Household Income:</strong> There appears to be a negative correlation between household income and obesity.
-                The same can be said for smoking. The poorer the population, the more likely it is to be obese and smoke.
+                <strong>Household Income:</strong> There appears to be a negative correlation between household income and and all three of the factors
+                looked at. The poorer the population, the more likely they are to be obese and smoke and the less likely to have healthcare.
               </li>
         </div>
       </div>
@@ -54,7 +58,7 @@
   </div>
 
   <!-- Footer-->
-  <div id="footer">
+  <div id="footer" style= "background-color: black; color: white;">
     <p>Nicole Cook, 2020</p>
   </div>
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
