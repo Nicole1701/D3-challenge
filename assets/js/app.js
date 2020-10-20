@@ -207,7 +207,7 @@ function renderYAxes(newYScale, yAxis) {
     .attr("r", 15)
     .attr("fill", "#659EC7")
     .attr("opacity", ".5")
-    .attr("stroke", "darkblue");
+    
 
     console.log(circlesGroup)
   

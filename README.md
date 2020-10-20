@@ -4,7 +4,7 @@
 
 ## Before you Begin
 
-- You will need to use python -m http.server to run the visualization. This will host the page at localhost:8000 in your web browser.
+- Webpage can be found here: [D3 Times](https://nicole1701.github.io/D3-challenge/)
 - The data set included with the assignment is based on 2014 ACS 1-year estimates and includes data on rates of income, obesity, poverty, etc. by state: [Data Set](https://data.census.gov/cedsci/)
 
 ## Top Level Analysis
