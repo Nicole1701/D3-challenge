@@ -143,7 +143,7 @@ function renderYAxes(newYScale, yAxis) {
     circlesGroup
     // Show tooltip
         .on("mouseover", function(data) {
-      toolTip.show(data);
+      toolTip.show(data)
         })
       // Hide tooltip
         .on("mouseleave", function(data) {
@@ -206,7 +206,7 @@ function renderYAxes(newYScale, yAxis) {
     .attr("cy", d => yLinearScale(d[chosenYAxis]))
     .attr("r", 15)
     .attr("fill", "#659EC7")
-    .attr("opacity", ".5")
+    .attr("opacity", ".5");
     
 
     console.log(circlesGroup)
